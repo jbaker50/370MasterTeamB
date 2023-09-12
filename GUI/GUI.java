@@ -85,6 +85,7 @@ public class GUI extends JPanel
                     g.fillRect(p.x, p.y, LENGTH, LENGTH);
 
                     // checks and displays the appropriate piece for the tile
+                    // TODO implement support for queens
                     switch (board2D[row][col])
                     {
                         case 'X' -> g.setColor(Color.RED);

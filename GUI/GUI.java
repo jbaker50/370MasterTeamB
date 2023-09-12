@@ -37,9 +37,20 @@ public class GUI extends JPanel
 
     private class Board extends JPanel //implements ActionListener, MouseListener 
     {
+        //2d array of positions that a piece can be displayed at for consistency
+        private final Point[][] positions = new Point[8][8];
+        private final int LENGTH = 40;
+
         Board() 
         {
             setBackground(Color.BLACK);
+            for (int row = 0; row < 8; row++)
+            {
+                for (int col = 0; col < 8; col++)
+                {
+                    positions[row][col] = new Point(col*LENGTH, row*LENGTH);
+                }
+            }
         }
 
         // this section sets the squares for the checkers board
@@ -48,6 +59,12 @@ public class GUI extends JPanel
             
             Graphics2D g2 = (Graphics2D)g;
 
+            // TODO: Replace with getting the board from the other team
+            char[][] board2D = new char[8][8];
+            for (int row = 0; row < 8; row++)
+                for (int col = 0; col < 8; col++)
+                    board2D[row][col] = 'X';
+
             g.setColor(Color.black);
             // sets size of the squares
             g.drawRect(0,0,getSize().width-1,getSize().height-1);
@@ -55,17 +72,28 @@ public class GUI extends JPanel
 
             // for the 8 rows and within thatthe 8 columns,
             // if the row is divisible by 2, set the color light gray, if not set it gray.
-            for (int row = 0; row < 8; row++) 
-            {
-                for (int col = 0; col < 8; col++) 
+            // also update the board with pieces
+            for (int row = 0; row < 8; row++)
+                for (int col = 0; col < 8; col++)
                 {
-                    if ( row % 2 == col % 2 )
+                    Point p = positions[row][col];
+
+                    if (row % 2 == col % 2)
                         g.setColor(Color.LIGHT_GRAY);
                     else
                         g.setColor(Color.GRAY);
-                    g.fillRect(2 + col*40, 2 + row*40, 40, 40);
+                    g.fillRect(p.x, p.y, LENGTH, LENGTH);
+
+                    // checks and displays the appropriate piece for the tile
+                    switch (board2D[row][col])
+                    {
+                        case 'X' -> g.setColor(Color.RED);
+                        case 'O' -> g.setColor(Color.BLACK);
+                        case '-' -> {}
+                        default -> throw new IllegalStateException("Unexpected value: " + board2D[row][col]);
+                    }
+                    g.fillOval(p.x, p.y, LENGTH, LENGTH);
                 }
-            }
         }
     }
 }
